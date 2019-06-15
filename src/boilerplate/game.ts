@@ -4,8 +4,8 @@ import {MainScene} from "./scenes/mainScene";
 // main game configuration
 const config: GameConfig = {
     type: Phaser.AUTO,
-    width: 800,
-    height: 600,
+    width: 1280,
+    height: 720,
     parent: "game",
     scene: MainScene,
     physics: {

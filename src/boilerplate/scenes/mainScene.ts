@@ -18,23 +18,17 @@ export class MainScene extends Phaser.Scene {
     }
 
     create(): void {
-        let p1Sprite = this.physics.add.sprite(100, 450, 'greenbox');
+        let p1Sprite = this.physics.add.sprite(512, 592, 'greenbox');
         let p1LeftKey = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.A);
         let p1RightKey = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.D);
         this.player1 = new Player(p1Sprite, p1LeftKey, p1RightKey);
 
-        let p2Sprite = this.physics.add.sprite(200, 450, 'redbox');
+        let p2Sprite = this.physics.add.sprite(768, 592, 'redbox');
         let p2LeftKey = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.LEFT);
         let p2rightKey = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.RIGHT);
         this.player2 = new Player(p2Sprite, p2LeftKey, p2rightKey);
 
         this.physics.add.collider(this.player1.sprite, this.player2.sprite);
-
-        this.createBomb();
-        this.createBomb();
-        this.createBomb();
-        this.createBomb();
-        this.createBomb();
     }
 
     private createBomb() {
