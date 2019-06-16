@@ -51,8 +51,18 @@ export class MainScene extends Phaser.Scene {
         this.tilePhysicsGroup = this.physics.add.staticGroup();
 
         this.physics.add.collider(this.playerPhysicsGroup, this.sideWallPhysicsGroup);
+        this.physics.add.overlap(this.player1.sprite, this.tiles, this.player1Collision, null, this);
+        this.physics.add.overlap(this.player2.sprite, this.tiles, this.player2Collision, null, this);
 
         this.createTileGroup();
+    }
+
+    private player1Collision() {
+        console.log("player1 hit a tile");
+    }
+
+    private player2Collision() {
+        console.log("player2 hit a tile");
     }
 
     private createTile(x: number, y: number) {
@@ -72,7 +82,6 @@ export class MainScene extends Phaser.Scene {
         this.tilePhysicsGroup.add(tile1);
         this.tilePhysicsGroup.add(tile2);
         this.tilePhysicsGroup.add(tile3);
-        this.physics.add.collider(this.playerPhysicsGroup, this.tilePhysicsGroup);
     }
 
     update(): void {
