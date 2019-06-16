@@ -14,7 +14,8 @@ export class MainScene extends Phaser.Scene {
     preload(): void {
         this.load.image("greenbox", "./src/boilerplate/assets/greenbox.png");
         this.load.image("redbox", "./src/boilerplate/assets/redbox.png");
-        this.load.image("bomb", "./src/boilerplate/assets/bomb.png");
+        this.load.image("tile", "./src/boilerplate/assets/tile.png");
+        this.load.image("wall", "./src/boilerplate/assets/wall.png");
     }
 
     create(): void {
@@ -28,12 +29,30 @@ export class MainScene extends Phaser.Scene {
         let p2rightKey = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.RIGHT);
         this.player2 = new Player(p2Sprite, p2LeftKey, p2rightKey);
 
+        let playerGroup = this.physics.add.group();
+        playerGroup.add(this.player1.sprite);
+        playerGroup.add(this.player2.sprite);
         this.physics.add.collider(this.player1.sprite, this.player2.sprite);
+
+        let leftWall = this.physics.add.staticSprite(8, 360, 'wall');
+        leftWall.setBounceX(0);
+        leftWall.setImmovable(true);
+        let rightWall = this.physics.add.staticSprite(1272, 360, 'wall');
+        rightWall.setBounceX(0);
+        rightWall.setImmovable(true);
+
+        let wallGroup = this.physics.add.staticGroup();
+        wallGroup.add(leftWall);
+        wallGroup.add(rightWall);
+
+        this.physics.add.collider(playerGroup, wallGroup);
+
+        // this.createTile();
     }
 
-    private createBomb() {
-        let bomb = this.physics.add.sprite(this.generatorRandomXCoord(), 0, 'bomb');
-        bomb.setVelocity(0, 200);
+    private createTile() {
+        let bomb = this.physics.add.sprite(this.generatorRandomXCoord(), 0, 'tile');
+        bomb.setVelocity(0, 250);
         bomb.setAcceleration(0, 0);
         bomb.setGravity(0, 0);
         this.bombs.push(bomb);
@@ -44,7 +63,7 @@ export class MainScene extends Phaser.Scene {
         this.player2.update();
 
         for (const bomb of this.bombs) {
-            if (bomb.y > 650) {
+            if (bomb.y > 800) {
                 let x = this.generatorRandomXCoord();
                 bomb.setPosition(x, 0);
             }
@@ -52,6 +71,7 @@ export class MainScene extends Phaser.Scene {
     }
 
     private generatorRandomXCoord() {
-        return Math.floor(Math.random() * Math.floor(800));
+        return 32;
+        // return Math.floor(Math.random() * Math.floor(16)) * 64;
     }
 }

@@ -13,7 +13,8 @@ const config: GameConfig = {
         arcade: {
             gravity: {x: 0, y: 0},
             debug: false
-        }
+        },
+        forceX: true
     }
 };
 
