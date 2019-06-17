@@ -7,6 +7,7 @@ export class MainScene extends Phaser.Scene {
     private playerPhysicsGroup: Phaser.Physics.Arcade.Group;
     private sideWallPhysicsGroup: Phaser.Physics.Arcade.StaticGroup;
     private tilePhysicsGroup: Phaser.Physics.Arcade.StaticGroup;
+    private currentVelocity: number = 250;
 
     constructor() {
         super({
@@ -80,6 +81,15 @@ export class MainScene extends Phaser.Scene {
             callbackScope: this,
             loop: true
         });
+
+        //speed up the game every so often
+        this.time.addEvent({
+            delay: 15000,// ms
+            startAt: 0,
+            callback: this.speedUpTiles,
+            callbackScope: this,
+            loop: true
+        });
     }
 
     private playerCollision(sprite1, sprite2) {
@@ -89,7 +99,7 @@ export class MainScene extends Phaser.Scene {
 
     private createTile(x: number, y: number) {
         let tile = this.physics.add.sprite(x, y, 'tile');
-        tile.setVelocity(0, 250);
+        tile.setVelocity(0, this.currentVelocity);
         tile.setAcceleration(0, 0);
         tile.setGravity(0, 0);
         tile.setName("tile");
@@ -135,6 +145,14 @@ export class MainScene extends Phaser.Scene {
         this.tilePhysicsGroup.add(tile3);
         this.tilePhysicsGroup.add(tile4);
         this.tilePhysicsGroup.add(tile5);
+    }
+
+    private speedUpTiles() {
+        // this.currentVelocity += 50;
+        // for (const tile of this.tiles) {
+        //     tile.setVelocityY(this.currentVelocity);
+        // }
+        // console.log("speed up!");
     }
 
     update(): void {
