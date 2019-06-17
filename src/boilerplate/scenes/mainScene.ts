@@ -60,8 +60,23 @@ export class MainScene extends Phaser.Scene {
 
         //spawn tile groups every so often
         this.time.addEvent({
-            delay: 2500,// ms
+            delay: 1500,// ms
+            startAt: 0,
             callback: this.createTileGroup,
+            callbackScope: this,
+            loop: true
+        });
+        this.time.addEvent({
+            delay: 2500,// ms
+            startAt: 1250,
+            callback: this.createLeftWallTileGroup,
+            callbackScope: this,
+            loop: true
+        });
+        this.time.addEvent({
+            delay: 2500,// ms
+            startAt: 0,
+            callback: this.createRightWallTileGroup,
             callbackScope: this,
             loop: true
         });
@@ -69,6 +84,7 @@ export class MainScene extends Phaser.Scene {
 
     private playerCollision(sprite1, sprite2) {
         console.log("collision detected between " + sprite1.name + " and " + sprite2.name);
+        this.scene.restart();
     }
 
     private createTile(x: number, y: number) {
@@ -83,11 +99,37 @@ export class MainScene extends Phaser.Scene {
 
     private createTileGroup() {
         let x = this.generatorRandomXCoord();
-        let tile1 = this.createTile(x - 64, 0);
-        let tile2 = this.createTile(x, 64);
-        let tile3 = this.createTile(x, -64);
-        let tile4 = this.createTile(x, 0);
-        let tile5 = this.createTile(x + 64, 0);
+        let tile1 = this.createTile(x - 64, -64);
+        let tile2 = this.createTile(x, 0);
+        let tile3 = this.createTile(x, -128);
+        let tile4 = this.createTile(x, -64);
+        let tile5 = this.createTile(x + 64, -64);
+        this.tilePhysicsGroup.add(tile1);
+        this.tilePhysicsGroup.add(tile2);
+        this.tilePhysicsGroup.add(tile3);
+        this.tilePhysicsGroup.add(tile4);
+        this.tilePhysicsGroup.add(tile5);
+    }
+
+    private createLeftWallTileGroup() {
+        let tile1 = this.createTile(48, 0);
+        let tile2 = this.createTile(48, -128);
+        let tile3 = this.createTile(48, -64);
+        let tile4 = this.createTile(112, -64);
+        let tile5 = this.createTile(176, -64);
+        this.tilePhysicsGroup.add(tile1);
+        this.tilePhysicsGroup.add(tile2);
+        this.tilePhysicsGroup.add(tile3);
+        this.tilePhysicsGroup.add(tile4);
+        this.tilePhysicsGroup.add(tile5);
+    }
+
+    private createRightWallTileGroup() {
+        let tile1 = this.createTile(1232, 0);
+        let tile2 = this.createTile(1232, -128);
+        let tile3 = this.createTile(1232, -64);
+        let tile4 = this.createTile(1168, -64);
+        let tile5 = this.createTile(1104, -64);
         this.tilePhysicsGroup.add(tile1);
         this.tilePhysicsGroup.add(tile2);
         this.tilePhysicsGroup.add(tile3);
@@ -98,9 +140,18 @@ export class MainScene extends Phaser.Scene {
     update(): void {
         this.player1.update();
         this.player2.update();
+
+        //remove out of view tiles
+        var i = this.tiles.length
+        while (i--) {
+            if (this.tiles[i].y > 800) {
+                this.tiles.splice(i, 1);
+            }
+        }
+        console.log("number of tiles in memory: " + this.tiles.length);
     }
 
     private generatorRandomXCoord() {
-        return Math.floor(Math.random() * Math.floor(16)) * 64;
+        return (6 + Math.floor(Math.random() * Math.floor(6))) * 64;
     }
 }
