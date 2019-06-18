@@ -28,6 +28,7 @@ export class MainScene extends Phaser.Scene {
         let p1LeftKey = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.A);
         let p1RightKey = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.D);
         this.player1 = new Player(p1Sprite, p1LeftKey, p1RightKey, "player1");
+        console.log(this.player1.getSprite());
 
         let p2Sprite = this.physics.add.sprite(768, 592, 'redbox');
         let p2LeftKey = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.LEFT);
@@ -35,9 +36,9 @@ export class MainScene extends Phaser.Scene {
         this.player2 = new Player(p2Sprite, p2LeftKey, p2rightKey, "player2");
 
         this.playerPhysicsGroup = this.physics.add.group();
-        this.playerPhysicsGroup.add(this.player1.sprite);
-        this.playerPhysicsGroup.add(this.player2.sprite);
-        this.physics.add.collider(this.player1.sprite, this.player2.sprite);
+        this.playerPhysicsGroup.add(this.player1.getSprite());
+        this.playerPhysicsGroup.add(this.player2.getSprite());
+        this.physics.add.collider(this.player1.getSprite(), this.player2.getSprite());
 
         //setup side walls
         let leftWall = this.physics.add.staticSprite(8, 360, 'wall');
@@ -54,12 +55,12 @@ export class MainScene extends Phaser.Scene {
         this.sideWallPhysicsGroup.add(rightWall);
         this.tilePhysicsGroup = this.physics.add.staticGroup();
 
-        //setup additional collision detection stuff
+        // setup additional collision detection stuff
         this.physics.add.collider(this.playerPhysicsGroup, this.sideWallPhysicsGroup);
-        this.physics.add.overlap(this.player1.sprite, this.tiles, this.playerCollision, null, this);
-        this.physics.add.overlap(this.player2.sprite, this.tiles, this.playerCollision, null, this);
+        this.physics.add.overlap(this.player1.getSprite(), this.tiles, this.playerCollision, null, this);
+        this.physics.add.overlap(this.player2.getSprite(), this.tiles, this.playerCollision, null, this);
 
-        //spawn tile groups every so often
+        // spawn tile groups every so often
         this.time.addEvent({
             delay: 1500,// ms
             startAt: 0,
@@ -82,7 +83,7 @@ export class MainScene extends Phaser.Scene {
             loop: true
         });
 
-        //speed up the game every so often
+        // speed up the game every so often
         this.time.addEvent({
             delay: 15000,// ms
             startAt: 0,
@@ -158,7 +159,6 @@ export class MainScene extends Phaser.Scene {
     update(): void {
         this.player1.update();
         this.player2.update();
-
         //remove out of view tiles
         var i = this.tiles.length
         while (i--) {
@@ -166,8 +166,9 @@ export class MainScene extends Phaser.Scene {
                 this.tiles.splice(i, 1);
             }
         }
-        console.log("number of tiles in memory: " + this.tiles.length);
+        // console.log("number of tiles in memory: " + this.tiles.length);
     }
+
 
     private generatorRandomXCoord() {
         return (6 + Math.floor(Math.random() * Math.floor(6))) * 64;
