@@ -51018,7 +51018,6 @@ declare namespace Phaser {
                  * @param y The new maximum vertical velocity. Default x.
                  */
                 setMaxVelocity(x: number, y?: number): this;
-
             }
 
             /**
@@ -51153,6 +51152,11 @@ declare namespace Phaser {
                 center: Phaser.Math.Vector2;
 
                 /**
+                 * The Body's change in velocity, in pixels per second squared.
+                 */
+                acceleration: Phaser.Math.Vector2;
+
+                /**
                  * The Body's velocity, in pixels per second.
                  */
                 velocity: Phaser.Math.Vector2;
@@ -51166,11 +51170,6 @@ declare namespace Phaser {
                  * The Body's absolute maximum change in position, in pixels per step.
                  */
                 deltaMax: Phaser.Math.Vector2;
-
-                /**
-                 * The Body's change in velocity, in pixels per second squared.
-                 */
-                acceleration: Phaser.Math.Vector2;
 
                 /**
                  * Whether this Body's velocity is affected by its `drag`.
@@ -52590,6 +52589,11 @@ declare namespace Phaser {
                  * Whether this Static Body is updated by the physics simulation.
                  */
                 enable: boolean;
+
+                /**
+                 * Whether accelerationX and accelerationY are non-zero. Set automatically during configuration.
+                 */
+                acceleration: Phaser.Math.Vector2;
 
                 /**
                  * Whether this Static Body's boundary is circular (`true`) or rectangular (`false`).
