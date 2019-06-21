@@ -1,11 +1,15 @@
+import {Tile} from "./tile";
+
 export class LevelManager {
     private _scene: Phaser.Scene;
-    private tiles: Array<Phaser.Physics.Arcade.Sprite> = [];
+    private tiles: Array<Tile> = [];
     private sideWallPhysicsGroup: Phaser.Physics.Arcade.StaticGroup;
     private tilePhysicsGroup: Phaser.Physics.Arcade.StaticGroup;
+    private playerPhysicsGroup: Phaser.Physics.Arcade.Group;
 
-    constructor(scene: Phaser.Scene) {
+    constructor(scene: Phaser.Scene, playerPhysicsGroup: Phaser.Physics.Arcade.Group) {
         this._scene = scene;
+        this.playerPhysicsGroup = playerPhysicsGroup;
     }
 
     preload() {
@@ -13,7 +17,7 @@ export class LevelManager {
         this._scene.load.image("wall", "./src/boilerplate/assets/wall.png");
     }
 
-    create(playerPhysicsGroup: Phaser.Physics.Arcade.Group) {
+    create() {
         //setup side walls
         let leftWall = this._scene.physics.add.staticSprite(8, 360, 'wall');
         leftWall.setBounce(0, 0);
@@ -30,8 +34,8 @@ export class LevelManager {
         this.tilePhysicsGroup = this._scene.physics.add.staticGroup();
 
         // setup additional collision detection stuff
-        this._scene.physics.add.collider(playerPhysicsGroup, this.sideWallPhysicsGroup);
-        this._scene.physics.add.overlap(playerPhysicsGroup, this.tiles, this.playerCollision, null, this);
+        this._scene.physics.add.collider(this.playerPhysicsGroup, this.sideWallPhysicsGroup);
+        this._scene.physics.add.overlap(this.playerPhysicsGroup, this.tilePhysicsGroup, this.playerCollision, null, this);
         // this._scene.physics.add.overlap(this.player1.getSprite(), this.tiles, this.playerCollision, null, this);
         // this._scene.physics.add.overlap(this.player2.getSprite(), this.tiles, this.playerCollision, null, this);
 
@@ -65,12 +69,20 @@ export class LevelManager {
 
     update() {
         //remove out of view tiles
-        var i = this.tiles.length
+        var i = this.tiles.length;
         while (i--) {
-            if (this.tiles[i].y > 800) {
+            if (this.tiles[i].sprite.y > 800) {
                 this.tiles.splice(i, 1);
             }
         }
+    }
+
+    private getAllTileSprites(): Array<Phaser.Physics.Arcade.Sprite> {
+        let tileSprites = [];
+        for (const tile of this.tiles) {
+            tileSprites.push(tile.sprite);
+        }
+        return tileSprites;
     }
 
     private generatorRandomXCoord() {
@@ -78,11 +90,10 @@ export class LevelManager {
     }
 
     private createTile(x: number, y: number) {
-        let tile = this._scene.physics.add.sprite(x, y, 'tile');
-        tile.setVelocity(0, 250);
-        tile.setAcceleration(0, 0);
-        tile.setGravity(0, 0);
-        tile.setName("tile");
+        let tileSprite = this._scene.physics.add.sprite(x, y, 'tile');
+        let tile = new Tile(tileSprite);
+        this.tilePhysicsGroup.add(tile.sprite);
+        this._scene.physics.add.existing(tile.sprite);
         this.tiles.push(tile);
         return tile;
     }
@@ -94,11 +105,6 @@ export class LevelManager {
         let tile3 = this.createTile(x, -128);
         let tile4 = this.createTile(x, -64);
         let tile5 = this.createTile(x + 64, -64);
-        this.tilePhysicsGroup.add(tile1);
-        this.tilePhysicsGroup.add(tile2);
-        this.tilePhysicsGroup.add(tile3);
-        this.tilePhysicsGroup.add(tile4);
-        this.tilePhysicsGroup.add(tile5);
     }
 
     private createLeftWallTileGroup() {
@@ -107,11 +113,6 @@ export class LevelManager {
         let tile3 = this.createTile(48, -64);
         let tile4 = this.createTile(112, -64);
         let tile5 = this.createTile(176, -64);
-        this.tilePhysicsGroup.add(tile1);
-        this.tilePhysicsGroup.add(tile2);
-        this.tilePhysicsGroup.add(tile3);
-        this.tilePhysicsGroup.add(tile4);
-        this.tilePhysicsGroup.add(tile5);
     }
 
     private createRightWallTileGroup() {
@@ -120,11 +121,6 @@ export class LevelManager {
         let tile3 = this.createTile(1232, -64);
         let tile4 = this.createTile(1168, -64);
         let tile5 = this.createTile(1104, -64);
-        this.tilePhysicsGroup.add(tile1);
-        this.tilePhysicsGroup.add(tile2);
-        this.tilePhysicsGroup.add(tile3);
-        this.tilePhysicsGroup.add(tile4);
-        this.tilePhysicsGroup.add(tile5);
     }
 
 }

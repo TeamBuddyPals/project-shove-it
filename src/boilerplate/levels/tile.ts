@@ -9,6 +9,10 @@ export class Tile {
         this._sprite.setName("tile");
     }
 
+    get sprite(): Phaser.Physics.Arcade.Sprite {
+        return this._sprite;
+    }
+
     update() {
 
     }

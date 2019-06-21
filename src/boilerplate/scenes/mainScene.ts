@@ -11,12 +11,14 @@ export class MainScene extends Phaser.Scene {
         super({
             key: "MainScene"
         });
-        this.levelManager = new LevelManager(this);
     }
 
     preload(): void {
         this.load.image("greenbox", "./src/boilerplate/assets/greenbox.png");
         this.load.image("redbox", "./src/boilerplate/assets/redbox.png");
+
+        this.playerPhysicsGroup = this.physics.add.group();
+        this.levelManager = new LevelManager(this, this.playerPhysicsGroup);
         this.levelManager.preload()
     }
 
@@ -33,12 +35,11 @@ export class MainScene extends Phaser.Scene {
         let p2rightKey = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.RIGHT);
         this.player2 = new Player(p2Sprite, p2LeftKey, p2rightKey, "player2");
 
-        this.playerPhysicsGroup = this.physics.add.group();
         this.playerPhysicsGroup.add(this.player1.getSprite());
         this.playerPhysicsGroup.add(this.player2.getSprite());
         this.physics.add.collider(this.player1.getSprite(), this.player2.getSprite());
 
-        this.levelManager.create(this.playerPhysicsGroup); //todo how can i have phaser do this instead of doing it manually?
+        this.levelManager.create(); //todo how can i have phaser do this instead of doing it manually?
     }
 
     update(): void {
