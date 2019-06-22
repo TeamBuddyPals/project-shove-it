@@ -6,6 +6,7 @@ export class MainGameplayScene extends Phaser.Scene {
     private _player2: Player;
     private _levelManager: LevelManager;
     private _playerPhysicsGroup: Phaser.Physics.Arcade.Group;
+    private _playerExploding: boolean = false;
 
     constructor() {
         super({
@@ -22,6 +23,8 @@ export class MainGameplayScene extends Phaser.Scene {
             './src/boilerplate/assets/explosion.png',
             {frameWidth: 256}
         );
+
+        this.load.audio('explosionSound', ['./src/boilerplate/assets/audio/explosion.mp3']);
 
         this._playerPhysicsGroup = this.physics.add.group();
         this._levelManager.preload();
@@ -53,10 +56,13 @@ export class MainGameplayScene extends Phaser.Scene {
             frameRate: 25,
             repeat: 2
         });
+
+        this.sound.add('explosionSound');
     }
 
     private playerCollision(sprite1, sprite2): void {
         console.log("collision detected between " + sprite1.name + " and " + sprite2.name);
+
         this._player1.sprite.on('animationcomplete', this.restart, this);
         this._player2.sprite.on('animationcomplete', this.restart, this);
 
@@ -65,9 +71,15 @@ export class MainGameplayScene extends Phaser.Scene {
         } else {
             this._player2.sprite.anims.play('explosionAnimation', true);
         }
+
+        if (this._playerExploding === false) {
+            this.sound.play('explosionSound', {loop: false})
+        }
+        this._playerExploding = true;
     }
 
     private restart(): void {
+        this._playerExploding = false;
         this.scene.restart();
     }
 
