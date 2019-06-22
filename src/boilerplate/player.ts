@@ -15,11 +15,11 @@ export class Player {
         this._sprite.setName(name)
     }
 
-    getSprite(): Phaser.Physics.Arcade.Sprite {
+    get sprite(): Phaser.Physics.Arcade.Sprite {
         return this._sprite;
     }
 
-    showDebugDetails():void {
+    showDebugDetails(): void {
         console.log(this._sprite.body);
         console.log(this._sprite.body.acceleration);
         console.log(this._sprite.body.velocity);

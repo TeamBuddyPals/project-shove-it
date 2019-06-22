@@ -2,7 +2,7 @@ import {MainGameplayScene} from "./mainGameplayScene";
 
 export class MenuScene extends Phaser.Scene {
 
-    private _skipMenu = false;
+    private _skipMenu = true;
 
     constructor() {
         super({

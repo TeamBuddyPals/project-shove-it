@@ -18,6 +18,11 @@ export class MainGameplayScene extends Phaser.Scene {
         this.load.image("greenbox", "./src/boilerplate/assets/greenbox.png");
         this.load.image("redbox", "./src/boilerplate/assets/redbox.png");
 
+        this.load.spritesheet('explosionSpriteSheet',
+            './src/boilerplate/assets/explosion.png',
+            {frameWidth: 256}
+        );
+
         this._playerPhysicsGroup = this.physics.add.group();
         this._levelManager.preload();
     }
@@ -28,23 +33,41 @@ export class MainGameplayScene extends Phaser.Scene {
         let p1LeftKey = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.A);
         let p1RightKey = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.D);
         this._player1 = new Player(p1Sprite, p1LeftKey, p1RightKey, "player1");
-        console.log(this._player1.getSprite());
+        console.log(this._player1.sprite);
 
         let p2Sprite = this.physics.add.sprite(768, 592, 'redbox');
         let p2LeftKey = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.LEFT);
         let p2rightKey = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.RIGHT);
         this._player2 = new Player(p2Sprite, p2LeftKey, p2rightKey, "player2");
 
-        this._playerPhysicsGroup.add(this._player1.getSprite());
-        this._playerPhysicsGroup.add(this._player2.getSprite());
-        this.physics.add.collider(this._player1.getSprite(), this._player2.getSprite());
+        this._playerPhysicsGroup.add(this._player1.sprite);
+        this._playerPhysicsGroup.add(this._player2.sprite);
+        this.physics.add.collider(this._player1.sprite, this._player2.sprite);
 
         this._levelManager.create();
         this.physics.add.collider(this._playerPhysicsGroup, this._levelManager.sideWallPhysicsGroup);
+
+        this.anims.create({
+            key: 'explosionAnimation',
+            frames: this.anims.generateFrameNumbers('explosionSpriteSheet', {start: 1, end: 14}),
+            frameRate: 25,
+            repeat: 2
+        });
     }
 
-    private playerCollision(sprite1, sprite2) {
+    private playerCollision(sprite1, sprite2): void {
         console.log("collision detected between " + sprite1.name + " and " + sprite2.name);
+        this._player1.sprite.on('animationcomplete', this.restart, this);
+        this._player2.sprite.on('animationcomplete', this.restart, this);
+
+        if (sprite1.name == 'player1' || sprite2.name == 'player1') {
+            this._player1.sprite.anims.play('explosionAnimation', true);
+        } else {
+            this._player2.sprite.anims.play('explosionAnimation', true);
+        }
+    }
+
+    private restart(): void {
         this.scene.restart();
     }
 
