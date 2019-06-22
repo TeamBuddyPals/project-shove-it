@@ -1,7 +1,7 @@
 import {Player} from "../player";
 import {LevelManager} from "../levels/levelManager";
 
-export class MainScene extends Phaser.Scene {
+export class MainGameplayScene extends Phaser.Scene {
     private _player1: Player;
     private _player2: Player;
     private _levelManager: LevelManager;
@@ -9,7 +9,7 @@ export class MainScene extends Phaser.Scene {
 
     constructor() {
         super({
-            key: "MainScene"
+            key: "MainGameplayScene"
         });
         this._levelManager = new LevelManager(this);
     }

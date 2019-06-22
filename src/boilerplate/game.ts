@@ -1,5 +1,6 @@
 import "phaser";
-import {MainScene} from "./scenes/mainScene";
+import {MenuScene} from "./scenes/menuScene";
+import {MainGameplayScene} from "./scenes/mainGameplayScene";
 
 // main game configuration
 const config: GameConfig = {
@@ -7,7 +8,7 @@ const config: GameConfig = {
     width: 1280,
     height: 720,
     parent: "game",
-    scene: MainScene,
+    scene: [MenuScene, MainGameplayScene],
     physics: {
         default: "arcade",
         arcade: {
