@@ -5,11 +5,9 @@ export class LevelManager {
     private _tiles: Array<Tile> = [];
     private _sideWallPhysicsGroup: Phaser.Physics.Arcade.StaticGroup;
     private _tilePhysicsGroup: Phaser.Physics.Arcade.StaticGroup;
-    private _playerPhysicsGroup: Phaser.Physics.Arcade.Group;
 
-    constructor(scene: Phaser.Scene, playerPhysicsGroup: Phaser.Physics.Arcade.Group) {
+    constructor(scene: Phaser.Scene) {
         this._scene = scene;
-        this._playerPhysicsGroup = playerPhysicsGroup;
     }
 
     preload() {
