@@ -2,14 +2,14 @@ import {Tile} from "./tile";
 
 export class LevelManager {
     private _scene: Phaser.Scene;
-    private tiles: Array<Tile> = [];
-    private sideWallPhysicsGroup: Phaser.Physics.Arcade.StaticGroup;
-    private tilePhysicsGroup: Phaser.Physics.Arcade.StaticGroup;
-    private playerPhysicsGroup: Phaser.Physics.Arcade.Group;
+    private _tiles: Array<Tile> = [];
+    private _sideWallPhysicsGroup: Phaser.Physics.Arcade.StaticGroup;
+    private _tilePhysicsGroup: Phaser.Physics.Arcade.StaticGroup;
+    private _playerPhysicsGroup: Phaser.Physics.Arcade.Group;
 
     constructor(scene: Phaser.Scene, playerPhysicsGroup: Phaser.Physics.Arcade.Group) {
         this._scene = scene;
-        this.playerPhysicsGroup = playerPhysicsGroup;
+        this._playerPhysicsGroup = playerPhysicsGroup;
     }
 
     preload() {
@@ -28,16 +28,10 @@ export class LevelManager {
         rightWall.setImmovable(true);
         rightWall.setName("rightwall")
 
-        this.sideWallPhysicsGroup = this._scene.physics.add.staticGroup();
-        this.sideWallPhysicsGroup.add(leftWall);
-        this.sideWallPhysicsGroup.add(rightWall);
-        this.tilePhysicsGroup = this._scene.physics.add.staticGroup();
-
-        // setup additional collision detection stuff
-        this._scene.physics.add.collider(this.playerPhysicsGroup, this.sideWallPhysicsGroup);
-        this._scene.physics.add.overlap(this.playerPhysicsGroup, this.tilePhysicsGroup, this.playerCollision, null, this);
-        // this._scene.physics.add.overlap(this.player1.getSprite(), this.tiles, this.playerCollision, null, this);
-        // this._scene.physics.add.overlap(this.player2.getSprite(), this.tiles, this.playerCollision, null, this);
+        this._sideWallPhysicsGroup = this._scene.physics.add.staticGroup();
+        this._sideWallPhysicsGroup.add(leftWall);
+        this._sideWallPhysicsGroup.add(rightWall);
+        this._tilePhysicsGroup = this._scene.physics.add.staticGroup();
 
         this._scene.time.addEvent({
             delay: 1500,// ms
@@ -62,27 +56,26 @@ export class LevelManager {
         });
     }
 
-    private playerCollision(sprite1, sprite2) {
-        console.log("collision detected between " + sprite1.name + " and " + sprite2.name);
-        this._scene.scene.restart();
-    }
-
     update() {
-        //remove out of view tiles
-        var i = this.tiles.length;
+        //remove out of view _tiles
+        var i = this._tiles.length;
         while (i--) {
-            if (this.tiles[i].sprite.y > 800) {
-                this.tiles.splice(i, 1);
+            if (this._tiles[i].sprite.y > 800) {
+                this._tiles.splice(i, 1);
             }
         }
     }
 
-    private getAllTileSprites(): Array<Phaser.Physics.Arcade.Sprite> {
+    public getAllTileSprites(): Array<Phaser.Physics.Arcade.Sprite> {
         let tileSprites = [];
-        for (const tile of this.tiles) {
+        for (const tile of this._tiles) {
             tileSprites.push(tile.sprite);
         }
         return tileSprites;
+    }
+
+    get sideWallPhysicsGroup(): Phaser.Physics.Arcade.StaticGroup {
+        return this._sideWallPhysicsGroup;
     }
 
     private generatorRandomXCoord() {
@@ -92,9 +85,9 @@ export class LevelManager {
     private createTile(x: number, y: number) {
         let tileSprite = this._scene.physics.add.sprite(x, y, 'tile');
         let tile = new Tile(tileSprite);
-        this.tilePhysicsGroup.add(tile.sprite);
+        this._tilePhysicsGroup.add(tile.sprite);
         this._scene.physics.add.existing(tile.sprite);
-        this.tiles.push(tile);
+        this._tiles.push(tile);
         return tile;
     }
 
