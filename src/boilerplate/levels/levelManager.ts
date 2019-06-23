@@ -32,9 +32,8 @@ export class LevelManager {
         this._tilePhysicsGroup = this._scene.physics.add.staticGroup();
 
         this._scene.time.addEvent({
-            delay: 4000,// ms
+            delay: 3500,// ms
             startAt: 1250,
-            // callback: this.spawnRandomFormation,
             callback: this.spawnRandomFormation,
             callbackScope: this,
             loop: true
@@ -92,11 +91,13 @@ export class LevelManager {
     }
 
     private spawnRandomFormation() {
-        let random = this.getRandomInt(2);
+        let random = this.getRandomInt(3);
         if (random == 0) {
             this.spawnCircleFormation();
-        } else {
+        } else if (random == 1) {
             this.spawnSquaresFormation();
+        } else {
+            this.spawnHourglassFormation();
         }
     }
 
@@ -104,96 +105,65 @@ export class LevelManager {
         return Math.floor(Math.random() * Math.floor(max));
     }
 
-    //todo make it so we can define this sort of thing in a file
+    private spawnFormationFromGrid(grid: number[][]) {
+        let yOffset = grid.length;
+        for (var i = 0; i < grid.length; i++) {
+            for (var j = 0; j < grid[i].length; j++) {
+                if (grid[i][j] === 1) {
+                    this.createTileAtGridCoords(j, i - yOffset);
+                }
+            }
+        }
+    }
+
     private spawnCircleFormation() {
-        //left column
-        this.createTileAtGridCoords(0, -11);
-        this.createTileAtGridCoords(0, -10);
-        this.createTileAtGridCoords(0, -9);
-        this.createTileAtGridCoords(0, -8);
-        this.createTileAtGridCoords(0, -7);
-        this.createTileAtGridCoords(0, -6);
-        this.createTileAtGridCoords(0, -5);
-        this.createTileAtGridCoords(0, -4);
-        this.createTileAtGridCoords(0, -3);
-        this.createTileAtGridCoords(0, -2);
-        this.createTileAtGridCoords(0, -1);
-
-        //right column
-        this.createTileAtGridCoords(18, -11);
-        this.createTileAtGridCoords(18, -10);
-        this.createTileAtGridCoords(18, -9);
-        this.createTileAtGridCoords(18, -8);
-        this.createTileAtGridCoords(18, -7);
-        this.createTileAtGridCoords(18, -6);
-        this.createTileAtGridCoords(18, -5);
-        this.createTileAtGridCoords(18, -4);
-        this.createTileAtGridCoords(18, -3);
-        this.createTileAtGridCoords(18, -2);
-        this.createTileAtGridCoords(18, -1);
-
-        //left arc
-        this.createTileAtGridCoords(6, -11);
-        this.createTileAtGridCoords(5, -10);
-        this.createTileAtGridCoords(4, -9);
-        this.createTileAtGridCoords(4, -8);
-        this.createTileAtGridCoords(3, -7);
-        this.createTileAtGridCoords(3, -6);
-        this.createTileAtGridCoords(3, -5);
-        this.createTileAtGridCoords(4, -4);
-        this.createTileAtGridCoords(4, -3);
-        this.createTileAtGridCoords(5, -2);
-        this.createTileAtGridCoords(6, -1);
-
-        //right arc
-        this.createTileAtGridCoords(12, -11);
-        this.createTileAtGridCoords(13, -10);
-        this.createTileAtGridCoords(14, -9);
-        this.createTileAtGridCoords(14, -8);
-        this.createTileAtGridCoords(15, -7);
-        this.createTileAtGridCoords(15, -6);
-        this.createTileAtGridCoords(15, -5);
-        this.createTileAtGridCoords(14, -4);
-        this.createTileAtGridCoords(14, -3);
-        this.createTileAtGridCoords(13, -2);
-        this.createTileAtGridCoords(12, -1);
-
-        //center
-        this.createTileAtGridCoords(9, -7);
-        this.createTileAtGridCoords(9, -6);
-        this.createTileAtGridCoords(9, -5);
+        let grid: number[][] = [
+            [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
+            [1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1],
+            [1, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 1],
+            [1, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 1],
+            [1, 0, 0, 1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1, 0, 0, 1],
+            [1, 0, 0, 1, 0, 0, 0, 0, 1, 1, 1, 0, 0, 0, 0, 1, 0, 0, 1],
+            [1, 0, 0, 1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1, 0, 0, 1],
+            [1, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 1],
+            [1, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 1],
+            [1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1],
+            [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1]
+        ];
+        this.spawnFormationFromGrid(grid);
     }
 
     private spawnSquaresFormation() {
-        this.createTileAtGridCoords(3, -3);
-        this.createTileAtGridCoords(3, -4);
-        this.createTileAtGridCoords(4, -3);
-        this.createTileAtGridCoords(4, -4);
+        let grid: number[][] = [
+            [0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 0, 0, 0, 0, 0, 0, 1, 0],
+            [0, 0, 1, 1, 0, 0, 0, 0, 1, 1, 1, 0, 0, 1, 0, 0, 0, 0, 0],
+            [0, 0, 1, 1, 0, 0, 0, 0, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0],
+            [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+            [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0],
+            [0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0],
+            [0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+            [0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0],
+            [0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0],
+            [0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
+            [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+        ];
+        this.spawnFormationFromGrid(grid);
+    }
 
-        this.createTileAtGridCoords(13, -2);
-        this.createTileAtGridCoords(13, -3);
-        this.createTileAtGridCoords(14, -2);
-        this.createTileAtGridCoords(14, -3);
-
-        this.createTileAtGridCoords(9, -6);
-        this.createTileAtGridCoords(9, -7);
-        this.createTileAtGridCoords(10, -6);
-        this.createTileAtGridCoords(10, -7);
-
-        this.createTileAtGridCoords(2, -10);
-        this.createTileAtGridCoords(2, -11);
-        this.createTileAtGridCoords(3, -10);
-        this.createTileAtGridCoords(3, -11);
-
-        this.createTileAtGridCoords(15, -8);
-        this.createTileAtGridCoords(15, -9);
-        this.createTileAtGridCoords(16, -8);
-        this.createTileAtGridCoords(16, -9);
-
-        this.createTileAtGridCoords(7, -12);
-        this.createTileAtGridCoords(7, -13);
-        this.createTileAtGridCoords(8, -12);
-        this.createTileAtGridCoords(8, -13);
-
+    private spawnHourglassFormation() {
+        let grid: number[][] = [
+            [1, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 1],
+            [1, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 1],
+            [1, 0, 0, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 0, 0, 1],
+            [1, 0, 0, 1, 1, 1, 1, 0, 0, 0, 0, 0, 1, 1, 1, 1, 0, 0, 1],
+            [1, 0, 0, 1, 1, 1, 1, 1, 0, 0, 0, 1, 1, 1, 1, 1, 0, 0, 1],
+            [1, 0, 0, 1, 1, 1, 1, 1, 0, 0, 0, 1, 1, 1, 1, 1, 0, 0, 1],
+            [1, 0, 0, 1, 1, 1, 1, 1, 0, 0, 0, 1, 1, 1, 1, 1, 0, 0, 1],
+            [1, 0, 0, 1, 1, 1, 1, 0, 0, 0, 0, 0, 1, 1, 1, 1, 0, 0, 1],
+            [1, 0, 0, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 0, 0, 1],
+            [1, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 1],
+            [1, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 1]
+        ];
+        this.spawnFormationFromGrid(grid);
     }
 }
