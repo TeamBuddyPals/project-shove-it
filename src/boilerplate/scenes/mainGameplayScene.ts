@@ -7,7 +7,7 @@ export class MainGameplayScene extends Phaser.Scene {
     private _levelManager: LevelManager;
     private _playerPhysicsGroup: Phaser.Physics.Arcade.Group;
     private _playerExploding: boolean = false;
-    private _soundEnabled: boolean = false;
+    private _soundEnabled: boolean = true;
 
     constructor() {
         super({
