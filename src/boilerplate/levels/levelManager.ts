@@ -32,9 +32,10 @@ export class LevelManager {
         this._tilePhysicsGroup = this._scene.physics.add.staticGroup();
 
         this._scene.time.addEvent({
-            delay: 5000,// ms
+            delay: 4000,// ms
             startAt: 1250,
-            callback: this.spawnCircleFormation,
+            // callback: this.spawnRandomFormation,
+            callback: this.spawnRandomFormation,
             callbackScope: this,
             loop: true
         });
@@ -88,6 +89,19 @@ export class LevelManager {
         //64 pixels = size of a tile
         //32 pixels = width of a wall
         this.createTileAtPixelCoords((x * 64) + 64, (y * 64) + 64);
+    }
+
+    private spawnRandomFormation() {
+        let random = this.getRandomInt(2);
+        if (random == 0) {
+            this.spawnCircleFormation();
+        } else {
+            this.spawnSquaresFormation();
+        }
+    }
+
+    private getRandomInt(max) {
+        return Math.floor(Math.random() * Math.floor(max));
     }
 
     //todo make it so we can define this sort of thing in a file
@@ -148,6 +162,38 @@ export class LevelManager {
         this.createTileAtGridCoords(9, -7);
         this.createTileAtGridCoords(9, -6);
         this.createTileAtGridCoords(9, -5);
+    }
+
+    private spawnSquaresFormation() {
+        this.createTileAtGridCoords(3, -3);
+        this.createTileAtGridCoords(3, -4);
+        this.createTileAtGridCoords(4, -3);
+        this.createTileAtGridCoords(4, -4);
+
+        this.createTileAtGridCoords(13, -2);
+        this.createTileAtGridCoords(13, -3);
+        this.createTileAtGridCoords(14, -2);
+        this.createTileAtGridCoords(14, -3);
+
+        this.createTileAtGridCoords(9, -6);
+        this.createTileAtGridCoords(9, -7);
+        this.createTileAtGridCoords(10, -6);
+        this.createTileAtGridCoords(10, -7);
+
+        this.createTileAtGridCoords(2, -10);
+        this.createTileAtGridCoords(2, -11);
+        this.createTileAtGridCoords(3, -10);
+        this.createTileAtGridCoords(3, -11);
+
+        this.createTileAtGridCoords(15, -8);
+        this.createTileAtGridCoords(15, -9);
+        this.createTileAtGridCoords(16, -8);
+        this.createTileAtGridCoords(16, -9);
+
+        this.createTileAtGridCoords(7, -12);
+        this.createTileAtGridCoords(7, -13);
+        this.createTileAtGridCoords(8, -12);
+        this.createTileAtGridCoords(8, -13);
 
     }
 }
