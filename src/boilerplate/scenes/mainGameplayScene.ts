@@ -7,6 +7,7 @@ export class MainGameplayScene extends Phaser.Scene {
     private _levelManager: LevelManager;
     private _playerPhysicsGroup: Phaser.Physics.Arcade.Group;
     private _playerExploding: boolean = false;
+    private _soundEnabled: boolean = false;
 
     constructor() {
         super({
@@ -24,7 +25,7 @@ export class MainGameplayScene extends Phaser.Scene {
             {frameWidth: 256}
         );
 
-        this.load.audio('explosionSound', ['./src/boilerplate/assets/audio/explosion.mp3']);
+        this.load.audio('explosionSound', ['./src/boilerplate/assets/audio/explosion-short.mp3']);
 
         this._playerPhysicsGroup = this.physics.add.group();
         this._levelManager.preload();
@@ -72,7 +73,7 @@ export class MainGameplayScene extends Phaser.Scene {
             this._player2.sprite.anims.play('explosionAnimation', true);
         }
 
-        if (this._playerExploding === false) {
+        if (this._playerExploding === false && this._soundEnabled) {
             this.sound.play('explosionSound', {loop: false})
         }
         this._playerExploding = true;
