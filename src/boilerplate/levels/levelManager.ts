@@ -11,7 +11,9 @@ export class LevelManager {
     }
 
     preload() {
-        this._scene.load.image("tile", "./src/boilerplate/assets/image/tile.png");
+        this._scene.load.image("tile-box", "./src/boilerplate/assets/image/tile-box.png");
+        this._scene.load.image("tile-box2", "./src/boilerplate/assets/image/tile-box2.png");
+        this._scene.load.image("tile-mine", "./src/boilerplate/assets/image/tile-mine.png");
         this._scene.load.image("wall", "./src/boilerplate/assets/image/wall.png");
     }
 
@@ -32,7 +34,7 @@ export class LevelManager {
         this._tilePhysicsGroup = this._scene.physics.add.staticGroup();
 
         this._scene.time.addEvent({
-            delay: 3500,// ms
+            delay: 3200,// ms
             startAt: 1250,
             callback: this.spawnRandomFormation,
             callbackScope: this,
@@ -65,8 +67,21 @@ export class LevelManager {
         return this._sideWallPhysicsGroup;
     }
 
-    private createTileAtPixelCoords(x: number, y: number) {
-        let tileSprite = this._scene.physics.add.sprite(x, y, 'tile');
+    private createTileAtPixelCoords(x: number, y: number, tileType: number) {
+        var key;
+        if (tileType === 1) {
+            key = 'tile-box';
+        } else if (tileType === 2) {
+            key = 'tile-box2';
+        } else if (tileType === 3) {
+            key = 'tile-mine';
+        } else {
+            console.error("illegal tile type " + tileType);
+            return;
+        }
+
+        let tileSprite = this._scene.physics.add.sprite(x, y, key);
+
         let tile = new Tile(tileSprite);
         this._tilePhysicsGroup.add(tile.sprite);
         this._scene.physics.add.existing(tile.sprite);
@@ -74,7 +89,7 @@ export class LevelManager {
         return tile;
     }
 
-    private createTileAtGridCoords(x: number, y: number) {
+    private createTileAtGridCoords(x: number, y: number, tileType: number) {
         if (x < 0 || x > 18) {
             console.error("cannot spawn a tile at x coord " + x);
             return;
@@ -87,7 +102,7 @@ export class LevelManager {
 
         //64 pixels = size of a tile
         //32 pixels = width of a wall
-        this.createTileAtPixelCoords((x * 64) + 64, (y * 64) + 64);
+        this.createTileAtPixelCoords((x * 64) + 64, (y * 64) + 64, tileType);
     }
 
     private spawnRandomFormation() {
@@ -109,8 +124,8 @@ export class LevelManager {
         let yOffset = grid.length;
         for (var i = 0; i < grid.length; i++) {
             for (var j = 0; j < grid[i].length; j++) {
-                if (grid[i][j] === 1) {
-                    this.createTileAtGridCoords(j, i - yOffset);
+                if (grid[i][j] !== 0) {
+                    this.createTileAtGridCoords(j, i - yOffset, grid[i][j]);
                 }
             }
         }
@@ -118,33 +133,33 @@ export class LevelManager {
 
     private spawnCircleFormation() {
         let grid: number[][] = [
-            [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
-            [1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1],
-            [1, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 1],
-            [1, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 1],
-            [1, 0, 0, 1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1, 0, 0, 1],
-            [1, 0, 0, 1, 0, 0, 0, 0, 1, 1, 1, 0, 0, 0, 0, 1, 0, 0, 1],
-            [1, 0, 0, 1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1, 0, 0, 1],
-            [1, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 1],
-            [1, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 1],
-            [1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1],
-            [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1]
+            [2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2],
+            [2, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 2],
+            [2, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 2],
+            [2, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 2],
+            [2, 0, 0, 1, 0, 0, 0, 0, 0, 3, 0, 0, 0, 0, 0, 1, 0, 0, 2],
+            [2, 0, 0, 3, 0, 0, 0, 0, 3, 2, 3, 0, 0, 0, 0, 3, 0, 0, 2],
+            [2, 0, 0, 1, 0, 0, 0, 0, 0, 3, 0, 0, 0, 0, 0, 1, 0, 0, 2],
+            [2, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 2],
+            [2, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 2],
+            [2, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 2],
+            [2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2]
         ];
         this.spawnFormationFromGrid(grid);
     }
 
     private spawnSquaresFormation() {
         let grid: number[][] = [
-            [0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 0, 0, 0, 0, 0, 0, 1, 0],
-            [0, 0, 1, 1, 0, 0, 0, 0, 1, 1, 1, 0, 0, 1, 0, 0, 0, 0, 0],
+            [0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 0, 0, 0, 0, 0, 0, 2, 0],
+            [0, 0, 1, 1, 0, 0, 0, 0, 1, 3, 1, 0, 0, 1, 0, 0, 0, 0, 0],
             [0, 0, 1, 1, 0, 0, 0, 0, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0],
             [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-            [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0],
-            [0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0],
-            [0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-            [0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0],
+            [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 2, 0, 0],
+            [0, 0, 0, 0, 0, 0, 0, 2, 2, 0, 0, 0, 0, 0, 0, 2, 2, 0, 0],
+            [0, 0, 0, 0, 0, 0, 0, 2, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+            [0, 0, 0, 0, 0, 3, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0],
             [0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0],
-            [0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
+            [0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 3],
             [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
         ];
         this.spawnFormationFromGrid(grid);
@@ -152,17 +167,17 @@ export class LevelManager {
 
     private spawnHourglassFormation() {
         let grid: number[][] = [
-            [1, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 1],
-            [1, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 1],
-            [1, 0, 0, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 0, 0, 1],
-            [1, 0, 0, 1, 1, 1, 1, 0, 0, 0, 0, 0, 1, 1, 1, 1, 0, 0, 1],
-            [1, 0, 0, 1, 1, 1, 1, 1, 0, 0, 0, 1, 1, 1, 1, 1, 0, 0, 1],
-            [1, 0, 0, 1, 1, 1, 1, 1, 0, 0, 0, 1, 1, 1, 1, 1, 0, 0, 1],
-            [1, 0, 0, 1, 1, 1, 1, 1, 0, 0, 0, 1, 1, 1, 1, 1, 0, 0, 1],
-            [1, 0, 0, 1, 1, 1, 1, 0, 0, 0, 0, 0, 1, 1, 1, 1, 0, 0, 1],
-            [1, 0, 0, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 0, 0, 1],
-            [1, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 1],
-            [1, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 1]
+            [3, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 3],
+            [3, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 3],
+            [3, 0, 0, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 0, 0, 3],
+            [3, 0, 0, 1, 1, 1, 1, 0, 0, 0, 0, 0, 1, 1, 1, 1, 0, 0, 3],
+            [3, 0, 0, 1, 1, 1, 1, 1, 0, 0, 0, 1, 1, 1, 1, 1, 0, 0, 3],
+            [3, 0, 0, 1, 1, 1, 1, 1, 0, 0, 0, 1, 1, 1, 1, 1, 0, 0, 3],
+            [3, 0, 0, 1, 1, 1, 1, 1, 0, 0, 0, 1, 1, 1, 1, 1, 0, 0, 3],
+            [3, 0, 0, 1, 1, 1, 1, 0, 0, 0, 0, 0, 1, 1, 1, 1, 0, 0, 3],
+            [3, 0, 0, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 0, 0, 3],
+            [3, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 3],
+            [3, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 3]
         ];
         this.spawnFormationFromGrid(grid);
     }

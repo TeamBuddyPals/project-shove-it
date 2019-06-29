@@ -43,6 +43,7 @@ export class MainGameplayScene extends Phaser.Scene {
         let p2LeftKey = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.LEFT);
         let p2rightKey = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.RIGHT);
         this._player2 = new Player(p2Sprite, p2LeftKey, p2rightKey, "player2");
+        this._player2.sprite.setDisplaySize(64, 64);
 
         this._playerPhysicsGroup.add(this._player1.sprite);
         this._playerPhysicsGroup.add(this._player2.sprite);
