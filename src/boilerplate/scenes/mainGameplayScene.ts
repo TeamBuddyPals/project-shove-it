@@ -17,11 +17,11 @@ export class MainGameplayScene extends Phaser.Scene {
     }
 
     preload(): void {
-        this.load.image("greenbox", "./src/boilerplate/assets/greenbox.png");
-        this.load.image("redbox", "./src/boilerplate/assets/redbox.png");
+        this.load.image("greenbox", "./src/boilerplate/assets/image/greenbox.png");
+        this.load.image("redbox", "./src/boilerplate/assets/image/redbox.png");
 
         this.load.spritesheet('explosionSpriteSheet',
-            './src/boilerplate/assets/explosion.png',
+            './src/boilerplate/assets/image/spritesheet/explosion.png',
             {frameWidth: 256}
         );
 
@@ -37,7 +37,7 @@ export class MainGameplayScene extends Phaser.Scene {
         let p1LeftKey = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.A);
         let p1RightKey = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.D);
         this._player1 = new Player(p1Sprite, p1LeftKey, p1RightKey, "player1");
-        console.log(this._player1.sprite);
+        this._player1.sprite.setDisplaySize(64, 64);
 
         let p2Sprite = this.physics.add.sprite(768, 592, 'redbox');
         let p2LeftKey = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.LEFT);
@@ -61,7 +61,22 @@ export class MainGameplayScene extends Phaser.Scene {
         this.sound.add('explosionSound');
     }
 
-    private playerCollision(sprite1, sprite2): void {
+    update(): void {
+        this._player1.update();
+        this._player2.update();
+        this._levelManager.update();
+        this.physics.overlap(this._playerPhysicsGroup, this._levelManager.getAllTileSprites(), this.playerDestroyed, this.checkIfPlayerHitBottomOfTile, this);
+    }
+
+    private checkIfPlayerHitBottomOfTile(sprite1, sprite2): boolean {
+        let xDif = Math.abs(sprite1.x - sprite2.x);
+        if (xDif < 64) {
+            return true;
+        }
+        return false;
+    }
+
+    private playerDestroyed(sprite1, sprite2): void {
         console.log("collision detected between " + sprite1.name + " and " + sprite2.name);
 
         this._player1.sprite.on('animationcomplete', this.restart, this);
@@ -82,12 +97,5 @@ export class MainGameplayScene extends Phaser.Scene {
     private restart(): void {
         this._playerExploding = false;
         this.scene.restart();
-    }
-
-    update(): void {
-        this._player1.update();
-        this._player2.update();
-        this._levelManager.update();
-        this.physics.overlap(this._playerPhysicsGroup, this._levelManager.getAllTileSprites(), this.playerCollision, null, this);
     }
 }

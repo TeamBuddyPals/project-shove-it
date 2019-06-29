@@ -11,8 +11,8 @@ export class LevelManager {
     }
 
     preload() {
-        this._scene.load.image("tile", "./src/boilerplate/assets/tile.png");
-        this._scene.load.image("wall", "./src/boilerplate/assets/wall.png");
+        this._scene.load.image("tile", "./src/boilerplate/assets/image/tile.png");
+        this._scene.load.image("wall", "./src/boilerplate/assets/image/wall.png");
     }
 
     create() {

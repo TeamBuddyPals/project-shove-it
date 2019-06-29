@@ -15,7 +15,7 @@ export class MenuScene extends Phaser.Scene {
             this.scene.start("MainGameplayScene");
         }
 
-        this.load.image("title", "./src/boilerplate/assets/title.png");
+        this.load.image("title", "./src/boilerplate/assets/image/title.png");
     }
 
     create(): void {
