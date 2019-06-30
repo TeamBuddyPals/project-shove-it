@@ -79,15 +79,6 @@ export class MainGameplayScene extends Phaser.Scene {
         this._playerAndTileCollider = this.physics.add.collider(this._playerPhysicsGroup, this._levelManager.getAllTileSprites());
     }
 
-    // private checkIfPlayerHitBottomOfTile(sprite1, sprite2): boolean {
-    //     let xDif = Math.abs(sprite1.x - sprite2.x);
-    //     console.log(xDif);
-    //     if (xDif < 64) {
-    //         return true;
-    //     }
-    //     return false;
-    // }
-
     private playerDestroyed(sprite1, sprite2): void {
         console.log("collision detected between " + sprite1.name + " and " + sprite2.name);
 

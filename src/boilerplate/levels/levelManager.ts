@@ -15,6 +15,9 @@ export class LevelManager {
         this._scene.load.image("tile-box2", "./src/boilerplate/assets/image/tile-box2.png");
         this._scene.load.image("tile-mine", "./src/boilerplate/assets/image/tile-mine.png");
         this._scene.load.image("wall", "./src/boilerplate/assets/image/wall.png");
+
+        this._scene.load.image("background-tile", "./src/boilerplate/assets/image/background-tile.png");
+        this._scene.load.image("background-star", "./src/boilerplate/assets/image/background-star.png");
     }
 
     create() {
@@ -40,6 +43,22 @@ export class LevelManager {
             callbackScope: this,
             loop: true
         });
+
+        this._scene.time.addEvent({
+            delay: this.getBackgroundDelay(),// ms
+            startAt: 500,
+            callback: this.spawnBackgroundImage,
+            callbackScope: this,
+            loop: true
+        });
+
+        this._scene.time.addEvent({
+            delay: 50,// ms
+            startAt: 0,
+            callback: this.spawnBackgroundStar,
+            callbackScope: this,
+            loop: true
+        });
     }
 
     update() {
@@ -53,6 +72,26 @@ export class LevelManager {
                 this._tiles.splice(i, 1);
             }
         }
+    }
+
+    private getBackgroundDelay() {
+        return 8000 + this.getRandomInt(4000);
+    }
+
+    private spawnBackgroundImage() {
+        let xCoord = this.getRandomInt(1000);
+        let backgroundImage = this._scene.physics.add.sprite(xCoord, -100, 'background-tile');
+        backgroundImage.setVelocityY(50);
+        backgroundImage.setDepth(-100);
+    }
+
+    private spawnBackgroundStar() {
+        let xCoord = this.getRandomInt(1280);
+        let backgroundImage = this._scene.physics.add.sprite(xCoord, -50, 'background-star');
+
+        let velocityY = 100 + this.getRandomInt(100)
+        backgroundImage.setVelocityY(velocityY);
+        backgroundImage.setDepth(-101);
     }
 
     public getAllTileSprites(): Array<Phaser.Physics.Arcade.Sprite> {
