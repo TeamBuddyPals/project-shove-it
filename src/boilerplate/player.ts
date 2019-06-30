@@ -13,6 +13,7 @@ export class Player {
         this._rightKey = rightKey;
         this._sprite.setCollideWorldBounds(true);
         this._sprite.setName(name)
+        // this._sprite.body.on
     }
 
     get sprite(): Phaser.Physics.Arcade.Sprite {
