@@ -17,18 +17,26 @@ export class Player {
     private _mlockCooldown: number = 1000;
     private _canMLock: boolean = true;
     private _isMLocking: boolean = false;
+    // Push props
+    private _pushKey: Phaser.Input.Keyboard.Key;
+    private _pushDuration: number = 500;
+    private _pushCooldown: number = 1000;
+    private _canPush: boolean = true;
+    private _isPushing: boolean = false;
 
     constructor(sprite: Phaser.Physics.Arcade.Sprite,
                 leftKey: Phaser.Input.Keyboard.Key,
                 rightKey: Phaser.Input.Keyboard.Key,
                 dashKey: Phaser.Input.Keyboard.Key,
                 mLockKey: Phaser.Input.Keyboard.Key,
+                pushKey: Phaser.Input.Keyboard.Key,
                 name: string) {
         this._sprite = sprite;
         this._leftKey = leftKey;
         this._rightKey = rightKey;
         this._dashKey = dashKey;
         this._mLockKey = mLockKey;
+        this._pushKey = pushKey;
         this._sprite.setCollideWorldBounds(true);
         this._sprite.setName(name)
     }
@@ -57,6 +65,13 @@ export class Player {
 
     enableDash() {
         this._canDash = true;
+    }
+
+    performPush(): void {
+        console.log('PUSH - PERFORM');
+        // create 'push' block
+        // destroy 'push block' after attack has ended
+        console.log('PUSH - DURATION EXPIRED');
     }
 
     performDash() {

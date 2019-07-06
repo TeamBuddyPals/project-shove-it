@@ -19,6 +19,7 @@ export class MainGameplayScene extends Phaser.Scene {
     preload(): void {
         this.load.image("greenbox", "./src/boilerplate/assets/image/greenbox.png");
         this.load.image("redbox", "./src/boilerplate/assets/image/redbox.png");
+        this.load.image("pushblock", "./src/boilerplate/assets/image/pushblock.png")
 
         this.load.spritesheet('explosionSpriteSheet',
             './src/boilerplate/assets/image/spritesheet/explosion.png',
@@ -38,12 +39,14 @@ export class MainGameplayScene extends Phaser.Scene {
         let p1RightKey = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.D);
         let p1DashKey = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.R);
         let p1MLockKey = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.T);
+        let p1PushKey = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.Y);
         this._player1 = new Player(
             p1Sprite,
             p1LeftKey,
             p1RightKey,
             p1DashKey,
             p1MLockKey,
+            p1PushKey,
             "player1");
         this._player1.sprite.setDisplaySize(64, 64);
 
@@ -52,6 +55,7 @@ export class MainGameplayScene extends Phaser.Scene {
         let p2rightKey = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.RIGHT);
         let p2DashKey = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.M);
         let p2MLockKey = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.N);
+        let p2PushKey = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.O);
 
         this._player2 = new Player(
             p2Sprite,
@@ -59,6 +63,7 @@ export class MainGameplayScene extends Phaser.Scene {
             p2rightKey,
             p2DashKey,
             p2MLockKey,
+            p2PushKey,
             "player2");
         this._player2.sprite.setDisplaySize(64, 64);
 
@@ -66,15 +71,7 @@ export class MainGameplayScene extends Phaser.Scene {
         this._playerPhysicsGroup.add(this._player2.sprite);
         let collder = this.physics.add.collider(
             this._player1.sprite,
-            this._player2.sprite,
-            () => {
-                this.physics.
-                this._player1.disableDash();
-                this._player2.disableDash();
-                // disable dash ability on collision between players
-            },
-            null,
-            this);
+            this._player2.sprite);
             
         // this._levelManager.create();
         // this.physics.add.collider(this._playerPhysicsGroup, this._levelManager.sideWallPhysicsGroup);
